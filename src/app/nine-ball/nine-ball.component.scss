@@ -1,0 +1,56 @@
+:host {
+  ::ng-deep .mat-tab-body-wrapper {
+    height: 100%;
+  }
+  ::ng-deep .mat-tab-body.mat-tab-body-active {
+    position: absolute;
+  }
+
+  ::ng-deep .mat-tab-label-active {
+    opacity: 1;
+  }
+}
+
+.ball.mat-fab {
+  margin: 0 8px 14px 0;
+  width: 62px;
+  height: 62px;
+  color: black;
+  background-color: white;
+  .inner {
+    border-width: 17px;
+    border-style: solid;
+    background-color: white;
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    font-size: 18px;
+    line-height: 28px;
+    &.stripe {
+      clip-path: inset(8px 0 8px 0);
+    }
+  }
+  &.potted, &.dead {
+    opacity: 0.3;
+    &:not(.own) {
+      border-color: #ccc;
+    }
+  }
+  ::ng-deep .mat-button-wrapper {
+    padding: 0;
+  }
+}
+
+.shot-actions {
+  button {
+    margin-right: 8px;
+  }
+}
+
+mat-slider.mat-slider-has-ticks {
+  width: 100%;
+  ::ng-deep .mat-slider-ticks {
+    opacity: 1
+  }
+}

@@ -1,0 +1,84 @@
+
+<div fxFill fxLayout='column'>
+  <mat-toolbar color="primary">
+    <span fxFlex>9 Ball / R{{racks.length + 1}}&nbsp;</span>
+    <button (click)='decInnings()' [disabled]='!rack.innings' color='primary' mat-icon-button mat-raised-button aria-label="Example icon-button with a heart icon">
+      <mat-icon>keyboard_arrow_left</mat-icon>
+    </button>
+    <span style='font-size: 32px; position: relative;'>
+      <label style='font-size: 8px; position: absolute; top: -22px; left: -12px; margin-left: 50%;'>Innings</label>
+      &nbsp;{{ rack.innings }}&nbsp;
+    </span>
+    <button (click)='incInnings()' color='primary' mat-icon-button mat-raised-button aria-label="Example icon-button with a heart icon">
+      <mat-icon>keyboard_arrow_right</mat-icon>
+    </button>
+    <span fxFlex style='text-align: right;'>
+      <!-- <button mat-icon-button aria-label="Example icon-button with a heart icon">
+        <mat-icon>more_vert</mat-icon>
+      </button> -->
+      Match {{players[1].target}}/{{players[2].target}}
+    </span>
+  </mat-toolbar>
+  <mat-tab-group fxFlex disableRipple headerPosition='below' (selectedTabChange)='onSelectedTabChange($event)'>
+    <mat-tab class='player-tab' *ngFor="let player of players | keyvalue">
+      <ng-template mat-tab-label>
+        {{ player.value.name }} (SL{{player.value.sl}})
+      </ng-template>
+      <!-- <div fxFill fxLayout='column' style='overflow: auto;'> -->
+        <div style='padding: 20px 0 0 20px;'>
+          <span *ngFor="let ball of rack.balls | keyvalue: asIsOrder" style='position: relative;'>
+            <button mat-fab class='ball' (click)='onBallClick($event, player, ball.key)' (dblclick)='onBallDblClick($event, player, ball.key)' (contextmenu)='onBallContextMenu($event, player, ball.key)' [ngClass]="{ 'potted': ball.value.potted, 'own': ball.value.potted === player.key }" [disabled]='ball.value.disabled'>
+              <span class='inner' [ngClass]="{ 'stripe': ball.value.stripe }" [style.border-color]="(ball.value.potted && ball.value.potted !== player.key) ? '#ccc' : ball.value.color">{{ball.key}}</span>
+            </button>
+            <div *ngIf='!ball.value.dead && ball.value.potted === player.key' style='position: absolute; left: 36px; top: 8px; font-size: 24px; color: green;'>&#x2714;</div>
+            <div *ngIf='ball.value.dead' style='position: absolute; left: 36px; top: 8px; font-size: 24px; color: red;'>&#x2718;</div>
+          </span>
+        </div>
+        <!-- <span style='padding: 0 24px; color: #999; font-size: 10px; position: relative; top: -8px;'>
+          <span style='color: #222;'>Click</span> - Current player scores the ball / 
+          <span style='color: #222;'>Double Click</span> - Dead ball /
+          <span style='color: #222;'>Long Press</span> - Revert.
+        </span> -->
+        <div style='overflow: hidden; padding: 0 18px; margin-bottom: 10px;' fxLayout='row'>
+          <mat-slider [value]='player.value.score' class="cdk-focused cdk-touch-focused" thumbLabel tickInterval="1" min="0" [max]="player.value.target" style='margin-top: 26px;'></mat-slider>
+          <h1>/{{player.value.target}}</h1>
+        </div>
+        <div style='padding: 0 18px;' fxFlex fxLayout='column' fxLayout.sm='row'>
+          <div fxFlex fxLayout='row'>
+            <div fxFlex>
+              <button mat-raised-button style='margin-bottom: 5px;'><mat-icon>scatter_plot</mat-icon>Defense (0)</button>
+              <button mat-raised-button><mat-icon>timer</mat-icon>Timeout (0)</button>
+            </div>
+            <div fxFlex>
+              <label>Dead Balls</label>
+              <h1 class='mat-display-1'>
+                <span style='font-weight: bold; margin-right: 4px;'>{{ rack.dead }}</span>
+                <sub class='mat-caption'>Total: {{ rack.carryDead + rack.dead }}</sub>
+              </h1>
+            </div>
+          </div>
+          <div fxFlex>
+            <div fxFlex>
+              <label>Score</label>
+              <h1 class='mat-display-1'>
+                <span style='font-weight: bold; margin-right: 4px;'>{{ rack.score[player.key]}}</span>
+                <sup class='mat-caption' style='position: absolute;'>Remaining: {{ player.value.target - player.value.score }}</sup>
+                <sub class='mat-caption'>Total: {{ player.value.score }}</sub>
+              </h1>
+            </div>
+            <div fxFlex>
+              <label>Possible Match Points</label>
+              <h1 class='mat-display-1' style='white-space: nowrap;'>
+                <span style='font-weight: bold; margin-right: 4px;'>{{ player.value.possible ? player.value.possible.score : '--' }} </span>
+                <sub class='mat-caption'>*Opponent next {{ player.value.possible ? player.value.possible.next : 'X' }}</sub>
+              </h1>
+            </div>
+          </div>
+        </div>
+      <!-- </div> -->
+    </mat-tab>
+  </mat-tab-group>
+  <button (click)='newRack()' [disabled]='!rack.done' mat-raised-button color='primary' style='position: absolute; right: 10px; bottom: 6px; z-index: 1000;'>
+    <mat-icon>forward</mat-icon> New Rack
+  </button>
+</div>
